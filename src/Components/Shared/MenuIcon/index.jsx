@@ -1,6 +1,6 @@
 import styles from "./menu.module.css";
 
-const Menu = () => {
+const MenuIcon = () => {
   return (
     <div className={styles.hamburger}>
       <input className={styles.checkbox} type="checkbox" />
@@ -31,4 +31,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default MenuIcon;
