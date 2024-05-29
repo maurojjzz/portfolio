@@ -1,24 +1,27 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
-const HamburguerMenu = () => {
+const HamburguerMenu = ({ menuClick, onCloseComplete }) => {
   let container = useRef();
+  let anim = useRef(null);
 
-  useGSAP(
-    () => {
-      const ctx = gsap.context(() => {
-        gsap.fromTo(container.current, { x: "100%" }, { x: "0%", duration: 1, ease: "power3.inOut" });
-      }, container);
+  useGSAP(() => {
+    anim.current = gsap.fromTo(container.current, { x: "100%" }, { x: "0%", duration: 1, ease: "power3.inOut" });
+    return () => {
+      if (anim.current) {
+        anim.current.kill();
+      }
+    };
+  }, []);
 
-      return () =>{ 
-        ctx.revert(); 
-      };
-    },
-    { scope: container }
-  );
+  useEffect(() => {
+    if (!menuClick && anim.current) {
+      gsap.fromTo(container.current, { x: "0%" }, { x: "100%", duration: 1, ease: "power3.inOut" }).then(onCloseComplete);
+    }
+  }, [menuClick, onCloseComplete]);
 
   return (
     <div
